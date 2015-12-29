@@ -140,7 +140,17 @@ function(req, res) {
     if (found) {
       // the username already exists, check password
       console.log(found, 'the value of found inside the login');
-      res.send(200, 'Username taken, please pick another');
+      if (found.attributes.password === req.body.password) {
+        //send index
+        makeSession(req, res);
+        //res.send(303);
+        res.setHeader('Location', './');
+        res.redirect(303);
+      }
+      else {
+        // send sad note about wrong password
+        res.send(200, 'Incorrect password');
+      }
     }
     else {
       // new user to add?
