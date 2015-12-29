@@ -20,6 +20,7 @@ var User = db.Model.extend({
           return;
         }
         model.set('password', hash);
+        console.log(model.get('password'), 'this is hopefully hashed password in database?');
       });
     });
   }
