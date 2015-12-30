@@ -163,19 +163,25 @@ function(req, res) {
     //     res.send(200, 'Incorrect password');
     //   }
     // }
-    console.log(user.checkPassword, 'user.checkPassword results');
+    // console.log(user.checkPassword, 'user.checkPassword results');
     if (!user) {
       // new user to add?
       return res.send(200, 'that username isn\'t in our database');
     }
-    console.log(user.get('password'), "user.checkPassword");
 
-    user.checkPassword(req.body.password, user.attributes.password, function(passwordCorrect){
+    // console.log(user.get('password'), "user.checkPassword");
+
+    // HERE IS WHERE WE FAIL...  this asynchronously fails, and eventually chokes us, because it needs a callback
+    // console.log(user.checkPassword(req.body.password, user.attributes.password), "user.checkPassword");
+    user.checkPassword(req.body.password, function(passwordCorrect){
       if(passwordCorrect){
         console.log("samePassword");
+        makeSession(req, res);
+        res.redirect('./index');
       }
       else {
         console.log("not same password?");
+        res.send(200, 'Incorrect password');
       }
     });
 
