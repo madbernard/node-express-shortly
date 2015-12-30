@@ -33,12 +33,12 @@ app.use(session({
   cookie: {}
 }));
 
-
 app.get('/',
 function(req, res) {
   // console.log('in get this is req.session --> ', req.session, '<-- in get this is req.session');
   console.log(req.session.cookie, '<-- req.session.cookie from app get /');
   console.log(req.session.genid, '<-- req.session.genid from app get /');
+  console.log(req.url, 'request url');
 
   if (checkUser(req, res)) {
     res.render('index');
@@ -61,6 +61,19 @@ function(req, res) {
 app.get('/signup',
 function(req, res) {
   res.render('signup');
+});
+
+app.get('/logout',
+function(req, res) {
+  console.log(req.session, "session BEFORE destruction");
+  req.session.destroy(function(err) {
+    // cannot access session here
+    if (err) {
+      console.log(err);
+    }
+  });
+  console.log(req.session, "session AFTER destruction");
+  res.render('login');
 });
 
 app.get('/links',
