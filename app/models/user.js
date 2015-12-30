@@ -11,6 +11,15 @@ var User = db.Model.extend({
   // clicks: function() {
   //   return this.hasMany(Click);
   // },
+  checkPassword: function(password, hashedPassword, callback){
+    bcrypt.compare(password, hashedPassword, function(err, res){
+      console.log(res, 'in checkPassword');
+      callback(res);
+      // if (res){
+      //   //login
+      //   res.render('index');
+    });
+  },
 
   initialize: function(){
     var encodedFn = Promise.promisify(bcrypt.hash);

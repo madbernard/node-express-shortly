@@ -147,26 +147,38 @@ function(req, res) {
 
 app.post('/login',
 function(req, res) {
-  new User({ username: req.body.username }).fetch().then(function(found) {
-    if (found) {
-      // the username already exists, check password
-      console.log(found, 'the value of found inside the login');
-      if (found.attributes.password === req.body.password) {
-        //send index
-        makeSession(req, res);
-        //res.send(303);
-        res.setHeader('Location', './');
-        res.redirect(303);
+  new User({ username: req.body.username }).fetch().then(function(user) {
+    // if (user) {
+    //   // the username already exists, check password
+    //   console.log(user, 'the value of user inside the login');
+    //   if (user.attributes.password === req.body.password) {
+    //     //send index
+    //     makeSession(req, res);
+    //     //res.send(303);
+    //     res.setHeader('Location', './');
+    //     res.redirect(303);
+    //   }
+    //   else {
+    //     // send sad note about wrong password
+    //     res.send(200, 'Incorrect password');
+    //   }
+    // }
+    console.log(user.checkPassword, 'user.checkPassword results');
+    if (!user) {
+      // new user to add?
+      return res.send(200, 'that username isn\'t in our database');
+    }
+    console.log(user.get('password'), "user.checkPassword");
+
+    user.checkPassword(req.body.password, user.attributes.password, function(passwordCorrect){
+      if(passwordCorrect){
+        console.log("samePassword");
       }
       else {
-        // send sad note about wrong password
-        res.send(200, 'Incorrect password');
+        console.log("not same password?");
       }
-    }
-    else {
-      // new user to add?
-      res.send(200, 'that username isn\'t in our database');
-    }
+    });
+
   });
 });
 /************************************************************/
